@@ -11,6 +11,9 @@ public class PlayerBehavior : MonoBehaviour {
 	[SerializeField] float m_VelocidadeNormal = 6f; // Valor de velocidade normal (Andando)
 	[SerializeField] float m_VelocidadeRapida = 12f; //Valor de velocidade Rapida (Correndo)
 
+	private bool m_PodeAndar = true;
+	private bool m_Morto = false;
+
 	private Transform m_Pe_ChaoCheck; // Objeto que marca o pé do player.
 	private bool m_NoChao; //FLAG que indica se o Player está tocando Chão.
 
@@ -67,7 +70,7 @@ public class PlayerBehavior : MonoBehaviour {
 	public void Mover( float movimento, bool correndo, bool pulando ) {
 
 		//Verifica se o Player está no chao ou se pode mover no ar para poder efetuar movimento.
-		if (m_NoChao || m_MoverNoAr) {
+		if ( (m_NoChao || m_MoverNoAr) && m_PodeAndar ) {
 
 			//Atualiza variável no Animator
 			m_Animator.SetFloat ("Velocidade", Mathf.Abs(movimento));
@@ -105,5 +108,15 @@ public class PlayerBehavior : MonoBehaviour {
 
 	}
 
+	public void Morrer () {
+
+		if (!this.m_Morto) {
+			this.m_PodeAndar = false;
+			this.m_Morto = true;
+
+			this.m_Animator.SetBool ("Morto", m_Morto);
+			this.m_Animator.SetTrigger ("Morrer");
+		}
+	}
 
 }
